@@ -133,8 +133,9 @@ public class ImClient
         var messageJson = JsonConvert.SerializeObject(message);
         foreach (var sendArgs in redata.Values)
         {
-            OnSend?.Invoke(this, sendArgs);
-            _redis.Publish($"{_redisPrefix}Server{sendArgs.Server}",
+            OnSend?.Invoke(this, sendArgs); 
+            //_redis.Publish($"{_redisPrefix}Server{sendArgs.Server}",
+            _redis.Publish($"{_redisPrefix}Server_ImCore",
                 JsonConvert.SerializeObject((senderClientId, sendArgs.ReceiveClientId, messageJson, sendArgs.Receipt)));
         }
     }

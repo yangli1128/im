@@ -1,6 +1,4 @@
 ﻿
-#if ns20
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -58,7 +56,16 @@ class ImServer : ImClient
     public ImServer(ImServerOptions options) : base(options)
     {
         _server = options.Server;
-        _redis.Subscribe(($"{_redisPrefix}Server{_server}", RedisSubScribleMessage));
+        //_redis.Subscribe(($"{_redisPrefix}Server{_server}", RedisSubScribleMessage));
+        _redis.Subscribe(($"{_redisPrefix}Server_ImCore", RedisSubScribleMessage));
+        //移除在线 
+        var c = GetClientListByOnline();
+        foreach (var v in c)
+        {
+            _redis.HDel($"{_redisPrefix}Online", v.ToString());
+            //_redis.Eval($"if redis.call('HINCRBY', KEYS[1], '{v}', '-1') <= 0 then redis.call('HDEL', KEYS[1], '{v}') end return 1",
+            //$"{_redisPrefix}Online");
+        }
     }
 
     const int BufferSize = 4096;
@@ -94,6 +101,8 @@ class ImServer : ImClient
         var wslist = _clients.GetOrAdd(data.clientId, cliid => new ConcurrentDictionary<Guid, ImServerClient>());
         wslist.TryAdd(newid, cli);
         _redis.StartPipe(a => a.HIncrBy($"{_redisPrefix}Online", data.clientId.ToString(), 1).Publish($"evt_{_redisPrefix}Online", token_value));
+      
+        Console.WriteLine($"websocket {data.clientId} Online");
 
         var buffer = new byte[BufferSize];
         var seg = new ArraySegment<byte>(buffer);
@@ -113,6 +122,7 @@ class ImServer : ImClient
         if (wslist.Any() == false) _clients.TryRemove(data.clientId, out var oldwslist);
         _redis.Eval($"if redis.call('HINCRBY', KEYS[1], '{data.clientId}', '-1') <= 0 then redis.call('HDEL', KEYS[1], '{data.clientId}') end return 1",
             $"{_redisPrefix}Online");
+        Console.WriteLine($"websocket {data.clientId} Offline");
         LeaveChan(data.clientId, GetChanListByClientId(data.clientId));
         _redis.Publish($"evt_{_redisPrefix}Offline", token_value);
     }
@@ -123,13 +133,16 @@ class ImServer : ImClient
         {
             var data = JsonConvert.DeserializeObject<(Guid senderClientId, Guid[] receiveClientId, string content, bool receipt)>(e.Body);
             Trace.WriteLine($"收到消息：{data.content}" + (data.receipt ? "【需回执】" : ""));
+            Console.WriteLine($"收到消息：{data.content}" + (data.receipt ? "【需回执】" : ""));
 
             var outgoing = new ArraySegment<byte>(Encoding.UTF8.GetBytes(data.content));
             foreach (var clientId in data.receiveClientId)
             {
                 if (_clients.TryGetValue(clientId, out var wslist) == false)
                 {
-                    //Console.WriteLine($"websocket{clientId} 离线了，{data.content}" + (data.receipt ? "【需回执】" : ""));
+                    //移出 在线列表中的信息
+
+                    Console.WriteLine($"websocket{clientId} 离线了，{data.content}" + (data.receipt ? "【需回执】" : ""));
                     if (data.senderClientId != Guid.Empty && clientId != data.senderClientId && data.receipt)
                         SendMessage(clientId, new[] { data.senderClientId }, new
                         {
@@ -162,5 +175,3 @@ class ImServer : ImClient
         }
     }
 }
-
-#endif

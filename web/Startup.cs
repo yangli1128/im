@@ -41,8 +41,8 @@ namespace web
 
             ImHelper.Initialization(new ImClientOptions
             {
-                Redis = new CSRedis.CSRedisClient("118.25.209.177:26379,idleTimeout=3000,poolsize=5"),
-                Servers = new[] { "127.0.0.1:6001" }
+                Redis = new CSRedis.CSRedisClient("192.168.1.254:6379,idleTimeout=3000,poolsize=5"),
+                Servers = new[] { "192.168.1.124:6001" }//IMsever的地址，外网地址
             });
 
             ImHelper.Instance.OnSend += (s, e) => 

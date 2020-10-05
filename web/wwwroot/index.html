@@ -2,12 +2,17 @@
 <html>
 <head>
     <title>websocket 简易例子</title>
-    <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="https://vuejs.org/js/vue.min.js"></script>
+    <!--<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>-->
+    <!--<script src="https://vuejs.org/js/vue.min.js"></script>-->
+    <script src="jquery-2.2.0.js"></script>
+    <script src="vue.min.js"></script>
 </head>
 
 <body>
-
+    <input type="text" style="width:300px;" v-model="inputChannelMsg.content" id="guid" />
+    <input type="text" style="width:300px;" v-model="inputChannelMsg.content" id="msg" />
+    <input type="button" value="发送" onclick="if($('#msg').val()=='')return alert('请输入内容'); sendChannelMsg($('#guid').val(),$('#msg').val());$('#msg').val('')" />
+    <div id="rv"></div>
     <div id="app">
 
         <h1>id: {{id}}，昵称：<a href="#" @click="changeNick();return false;">{{nick||'&lt;未设置&gt;'}}</a></h1>
@@ -29,8 +34,6 @@
                     <div>{{msg.msg.content}}</div>
                 </div>
             </div>
-            <input type="text" style="width:300px;" v-model="inputChannelMsg.content" />
-            <input type="button" value="发送" @click="if(!inputChannelMsg.content)return alert('请输入内容'); sendChannelMsg(inputChannelMsg);inputChannelMsg.content=''" />
         </div>
 
     </div>
@@ -39,7 +42,12 @@
     <script>
         var gsocket = null;
         var gsocketTimeId = null;
+        var selfid = null;
+        function sendChannelMsg(guid, msg) {
+            ajax('/ws/send-msg', { senderWebsocketId: selfid, receiveWebsocketId: guid, message: msg }, function (rt) {
 
+            });
+        };
         new Vue({
             data: {
                 id: null,
@@ -60,6 +68,7 @@
                     if (_self.id != '' && _self.id) data.websocketId = _self.id;
                     ajax('/ws/pre-connect', data, function (d) {
                         if (!(_self.id != '' && _self.id)) _self.id = d.websocketId; //localStorage.setItem('websocketid', _self.id = d.websocketId); //存储本地重复使用
+                        selfid = _self.id;
                         var url = d.server;
                         if (gsocket) gsocket.close();
                         gsocket = null;
@@ -78,6 +87,7 @@
                         };
                         gsocket.onmessage = function (e) {
                             try {
+                                $("#rv").html($("#rv").html()+e.data+"<p>");
                                 var msg = JSON.parse(e.data);
                                 _self.onmessage.call(_self, msg);
                             } catch (e) {
@@ -123,6 +133,8 @@
                     if (chan) this.joinChannel(chan);
                 },
                 sendChannelMsg: function (msg) {
+                    alert(msg);
+                    return;
                     if (!this.currentChannel.chan) return alert('请加入一个聊天群');
                     var _self = this;
                     var data = { type: 'chanmsg', sender: _self.id, senderNick: _self.nick, chan: _self.currentChannel.chan, time: new Date().getTime(), msg: msg, };

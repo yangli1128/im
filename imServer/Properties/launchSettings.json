@@ -19,9 +19,9 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ImServerOption:Servers": "127.0.0.1:6001;127.0.0.2:6002",
-        "ImServerOption:Server": "127.0.0.1:6001",
-        "ImServerOption:CSRedisClient": "118.25.209.177:26379,poolsize=5",
+        "ImServerOption:Servers": "192.168.1.124:6001",
+        "ImServerOption:Server": "192.168.1.124:6001",
+        "ImServerOption:CSRedisClient": "192.168.1.254:6379,poolsize=5",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://0.0.0.0:6001/"
