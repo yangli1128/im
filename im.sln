@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2035
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29409.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "imServer", "imServer\imServer.csproj", "{10DE2011-BB67-4EDD-8CA9-7D3892403E7B}"
 EndProject
@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{70ABB376-3764-4610-80F9-BFD3AF554805}"
 	ProjectSection(SolutionItems) = preProject
 		readme.md = readme.md
+		webdoc_server_云信ID调用说明.png = webdoc_server_云信ID调用说明.png
 	EndProjectSection
 EndProject
 Global
