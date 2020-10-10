@@ -61,15 +61,28 @@ namespace webServer.Controllers
             {
                 return new AjaxResult<object>("to不存在");
             }
-            await _msgManager.Add("20201010001", from.ToString(), ope, to.ToString(), type, body);
+            int id = await _msgManager.Add("20201010001", from.ToString(), ope, to.ToString(), type, body);
             //判断自己是否在线
             if (!ImHelper.HasOnline(from))
                 return new AjaxResult<object>("from不在线");
             //发送消息
-            ImHelper.SendMessage(from, new[] { to }, (type, body), true);
+            ImHelper.SendMessage(from, new[] { to }, (id, type, body), true);
 
             return new AjaxResult<object>((object)(from + ":" + to));
         }
+        /// <summary>
+        /// 设置消息已读
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public async Task<AjaxResult<object>> MsgRead([FromForm] Guid from, [FromForm] Guid to)
+        {
+            await _msgManager.Read("20201010001", from.ToString(), to.ToString());
 
+            //ImHelper.SendMessage(from, new[] { to }, (id, type, body), true);
+
+            return new AjaxResult<object>();
+        }
     }
 }

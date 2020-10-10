@@ -40,6 +40,20 @@
             <param name="accid">用户IMID，唯一性，最大长度32字符</param>
             <returns></returns>
         </member>
+        <member name="M:webServer.Controllers.UserController.ConnectServer(System.Guid)">
+            <summary>
+            获取链接地址
+            </summary>
+            <param name="accid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:webServer.Controllers.UserController.HasOnline(System.Guid)">
+            <summary>
+            判断是否在线
+            </summary>
+            <param name="accid"></param>
+            <returns></returns>
+        </member>
         <member name="P:CS.Base.AjaxResult`1.code">
             <summary>
             错误代码，0：正常，其他值表示错误
