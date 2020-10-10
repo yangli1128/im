@@ -26,5 +26,10 @@ namespace webServer.Services
             await db.SaveChangesAsync();
             return 0;
         }
+
+        public async Task<bool> CheckAccid(string accid, string appid)
+        {
+            return await db.Userinfo.Where(w => w.Accid == accid && w.Appid == appid).CountAsync() > 0;
+        }
     }
 }

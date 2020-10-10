@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CS.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using webServer.Services;
@@ -14,10 +15,10 @@ namespace webServer.Controllers
     {
         private readonly ILogger<UserController> _logger;
 
-        private UserManager _userManager; 
+        private UserManager _userManager;
         private MsgManager _msgManager;
 
-        public MsgController(IServiceProvider serviceProvider):base(serviceProvider)
+        public MsgController(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -49,16 +50,25 @@ namespace webServer.Controllers
         /// </param>
         /// <returns></returns>
         [HttpPost("SendMsg")]
-        public async Task<string> SendMsg([FromForm] Guid from, [FromForm] int ope, [FromForm] Guid to, [FromForm] int type, [FromForm] string body)
+        public async Task<AjaxResult<object>> SendMsg([FromForm] Guid from, [FromForm] int ope, [FromForm] Guid to, [FromForm] int type, [FromForm] string body)
         {
-            await _msgManager.Add("20201010001",from.ToString(),ope,to.ToString(),type,body);
+            //判断是否存在
+            if (!await _userManager.CheckAccid(from.ToString(), "20201010001"))
+            {
+                return new AjaxResult<object>("from不存在");
+            }
+            if (!await _userManager.CheckAccid(to.ToString(), "20201010001"))
+            {
+                return new AjaxResult<object>("to不存在");
+            }
+            await _msgManager.Add("20201010001", from.ToString(), ope, to.ToString(), type, body);
             //判断自己是否在线
             if (!ImHelper.HasOnline(from))
-                return "";
+                return new AjaxResult<object>("from不在线");
             //发送消息
-            ImHelper.SendMessage(from, new[] { to }, (type,body), true);
+            ImHelper.SendMessage(from, new[] { to }, (type, body), true);
 
-            return from + ":" + to;
+            return new AjaxResult<object>((object)(from + ":" + to));
         }
 
     }
