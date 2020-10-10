@@ -53,7 +53,8 @@ namespace webServer.Controllers
         {
             await _msgManager.Add("20201010001",from.ToString(),ope,to.ToString(),type,body);
             //判断自己是否在线
-            //ImHelper.
+            if (!ImHelper.HasOnline(from))
+                return "";
             //发送消息
             ImHelper.SendMessage(from, new[] { to }, (type,body), true);
 
