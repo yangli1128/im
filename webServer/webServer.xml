@@ -4,7 +4,7 @@
         <name>webServer</name>
     </assembly>
     <members>
-        <member name="M:webServer.Controllers.MsgController.SendMsg(System.String,System.String,System.String,System.Int32,System.String)">
+        <member name="M:webServer.Controllers.MsgController.SendMsg(System.Guid,System.Int32,System.Guid,System.Int32,System.String)">
             <summary>
             发送普通消息
             </summary>
@@ -33,12 +33,42 @@
             </param>
             <returns></returns>
         </member>
-        <member name="M:webServer.Controllers.UserController.Create(System.String)">
+        <member name="M:webServer.Controllers.UserController.Create(System.Guid)">
             <summary>
             创建用户
             </summary>
             <param name="accid">用户IMID，唯一性，最大长度32字符</param>
             <returns></returns>
+        </member>
+        <member name="P:CS.Base.AjaxResult`1.code">
+            <summary>
+            错误代码，0：正常，其他值表示错误
+            </summary>
+        </member>
+        <member name="P:CS.Base.AjaxResult`1.msg">
+            <summary>
+            返回的信息提示
+            </summary>
+        </member>
+        <member name="P:CS.Base.AjaxResult`1.data">
+            <summary>
+            返回的数据
+            </summary>
+        </member>
+        <member name="T:CS.Base.FlipPageResult`1">
+            <summary>
+            bootstrap table 翻页返回结果
+            </summary>
+        </member>
+        <member name="P:CS.Base.FlipPageResult`1.total">
+            <summary>
+            总的数据记录
+            </summary>
+        </member>
+        <member name="P:CS.Base.FlipPageResult`1.rows">
+            <summary>
+            当前的数据集合
+            </summary>
         </member>
     </members>
 </doc>

@@ -4,19 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using webServer.Services;
 
 namespace webServer.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MsgController : ControllerBase
+    public class MsgController : BaseController
     {
         private readonly ILogger<UserController> _logger;
 
-        public MsgController(ILogger<UserController> logger)
+        private UserManager _userManager; 
+        private MsgManager _msgManager;
+
+        public MsgController(IServiceProvider serviceProvider):base(serviceProvider)
         {
-            _logger = logger;
         }
+
         /// <summary>
         /// 发送普通消息
         /// </summary>
@@ -45,9 +49,14 @@ namespace webServer.Controllers
         /// </param>
         /// <returns></returns>
         [HttpPost("SendMsg")]
-        public async Task<string> SendMsg([FromForm] string from, [FromForm] string ope, [FromForm] string to, [FromForm] int type, [FromForm] string body)
+        public async Task<string> SendMsg([FromForm] Guid from, [FromForm] int ope, [FromForm] Guid to, [FromForm] int type, [FromForm] string body)
         {
-            await Task.Yield();
+            await _msgManager.Add("20201010001",from.ToString(),ope,to.ToString(),type,body);
+            //判断自己是否在线
+            //ImHelper.
+            //发送消息
+            ImHelper.SendMessage(from, new[] { to }, (type,body), true);
+
             return from + ":" + to;
         }
 

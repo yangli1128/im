@@ -23,7 +23,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CSRedisCore" Version="3.6.3" />
+        <PackageReference Include="CSRedisCore" Version="3.6.5" />
         <PackageReference Include="System.Memory" Version="4.5.4" />
     </ItemGroup>
 

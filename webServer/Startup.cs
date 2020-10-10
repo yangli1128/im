@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using webServer.Models;
+using webServer.Services;
 
 namespace webServer
 {
@@ -29,6 +33,8 @@ namespace webServer
             services.AddCors(options => options.AddPolicy("all",
                     builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithMethods("OPTIONS"))
                 );
+            services.AddDbContext<imdbContext>(opt => opt.UseMySql(Configuration.GetConnectionString("imdb")));
+
             services.AddControllers().AddNewtonsoftJson(opt =>
             {
                 opt.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
@@ -45,6 +51,10 @@ namespace webServer
                     options.IncludeXmlComments(xmlPath);
                 }
             });
+
+            services.AddTransient(typeof(MsgManager));
+            services.AddTransient(typeof(UserManager));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +74,25 @@ namespace webServer
             {
                 c.SwaggerEndpoint(virtualPath + "/swagger/v1/swagger.json", "IM API V1");
             });
+
+            ImHelper.Initialization(new ImClientOptions
+            {
+                Redis = new CSRedis.CSRedisClient(Configuration["ImServerOption:CSRedisClient"]),
+                Servers = Configuration["ImServerOption:Servers"].Split(";"),//IMsever的地址，外网地址
+            });
+
+            ImHelper.Instance.OnSend += (s, e) =>
+                Console.WriteLine($"ImClient.SendMessage(server={e.Server},data={JsonConvert.SerializeObject(e.Message)})");
+
+            ImHelper.EventBus(
+                t =>
+                {
+                    Console.WriteLine(t.clientId + "上线了");
+                    var onlineUids = ImHelper.GetClientListByOnline();
+                    ImHelper.SendMessage(t.clientId, onlineUids, $"用户{t.clientId}上线了");
+                },
+                t => Console.WriteLine(t.clientId + "下线了"));
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
