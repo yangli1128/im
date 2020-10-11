@@ -76,6 +76,7 @@ namespace webServer.Controllers
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
+        [HttpPost("MsgRead")]
         public async Task<AjaxResult<object>> MsgRead([FromForm] Guid from, [FromForm] Guid to)
         {
             await _msgManager.Read("20201010001", from.ToString(), to.ToString());
