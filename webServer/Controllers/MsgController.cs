@@ -66,7 +66,7 @@ namespace webServer.Controllers
             if (!ImHelper.HasOnline(from))
                 return new AjaxResult<object>("from不在线");
             //发送消息
-            ImHelper.SendMessage(from, new[] { to }, (id, type, body), true);
+            ImHelper.SendMessage(from, new[] { to }, (id, ope, type, body), true);
 
             return new AjaxResult<object>((object)(from + ":" + to));
         }
@@ -79,8 +79,8 @@ namespace webServer.Controllers
         public async Task<AjaxResult<object>> MsgRead([FromForm] Guid from, [FromForm] Guid to)
         {
             await _msgManager.Read("20201010001", from.ToString(), to.ToString());
-
-            //ImHelper.SendMessage(from, new[] { to }, (id, type, body), true);
+            int ope = -1;
+            ImHelper.SendMessage(from, new[] { to }, (ope), true);
 
             return new AjaxResult<object>();
         }

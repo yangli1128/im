@@ -34,7 +34,7 @@ namespace webServer.Services
 
         public async Task Read(string appid, string from, string to)
         {
-            db.Database.ExecuteSqlRaw("update msginfo set Readstatus=1,readtime= where appid=@appid and to=@to and from=@from and readstatus=0",
+            db.Database.ExecuteSqlRaw("update msginfo set Readstatus=1,readtime=now() where appid=@appid and to=@to and from=@from and readstatus=0",
                 new MySqlParameter("@appid",appid),
                 new MySqlParameter("@to", from),
                 new MySqlParameter("@from", to)

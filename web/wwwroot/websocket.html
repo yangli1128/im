@@ -1,0 +1,85 @@
+﻿
+<html>
+<head>
+    <title>websocket 简易例子</title>
+    <script src="jquery-2.2.0.js"></script>
+    <script src="vue.min.js"></script>
+</head>
+
+<body>
+    <input type="text" style="width:300px;" v-model="inputChannelMsg.content" id="guid" />
+    <input type="text" style="width:300px;" v-model="inputChannelMsg.content" id="msg" />
+    <input type="button" value="发送a" onclick="a()" />
+    <input type="button" value="发送b" onclick="b()" />
+    <input type="button" value="发送c" onclick="c()" />
+    <input type="button" value="发送d" onclick="d()" />
+    <div id="rv"></div>
+
+    <script>
+        var gsocket = null;
+        var gsocketTimeId = null;
+        var selfid = null;
+        function a() {
+            var d = {
+                command: "subscribe",
+                identifier: '{"channel":"NotificationsChannel"}'
+            };
+            d = JSON.stringify(d);
+            gsocket.send(d);
+        }
+        function b() {
+            var d = {
+                command: "subscribe",
+                identifier: '{"channel":"VideoStreamChannel"}'
+            };
+            d = JSON.stringify(d);
+            gsocket.send(d);
+        }
+        function c() {
+            var d = {
+                command: "message",
+                data: '{"action_completion_id":"4169f1aa0c1a59762909e56ccf585851e5758808","action":"live_programmes"}',
+                identifier: '{"channel":"VideoStreamChannel"}'
+            };
+            d = JSON.stringify(d);
+            gsocket.send(d);
+        }
+        function d() {
+            var d = {
+                command: "message",
+                data: '{"clip_type":null,"promos_supported":true,"free_periods_supported":true,"video_type":"live","video_id":42905,"action_completion_id":"f50ec37554b11ecb4c719bbbfaf5cc5a7d2bc03d","action":"stream"}',
+                //data: '{"clip_type":null,"promos_supported":true,"free_periods_supported":true,"video_type":"live",                 "action_completion_id":"35df102f590745c7d5d7743d15b506b1a2f361d5","action":"stream"}',
+                identifier: '{"channel":"VideoStreamChannel"}'
+            };
+            d = JSON.stringify(d);
+            gsocket.send(d);
+        }
+        $(() => {
+            gsocket = null;
+gsocket = new WebSocket("wss://ws.rcncdn.com/h5live/stream?url=rtmp%3A%2F%2Fedgecluster.internal-rcncdn.com%2Flive&stream=australia_hd_fm_2200%3Ftkhash%3Dd_INvug5b3Ig-P0vwTFCB74OJdB7yLEPTRrlyFm070U%3D%26tkendtime%3D1602175540%26cust%3DRTN%26stream%3Daustralia_mbr%26hd%3D1%26user%3D&cid=912578&pid=1280787454&h=ZkDMn9mb-g-pVgnUo9nrjQ&e=1602175540");
+            //gsocket = new WebSocket("wss://www.racingtv.com:3334/members/cable", ['actioncable-v1-json', 'actioncable-unsupported']);
+            gsocket.onopen = function (e) {
+                console.log('websocket connect');
+            };
+            gsocket.onclose = function (e) {
+                console.log('websocket disconnect');
+                gsocket = null;
+            };
+            gsocket.onmessage = function (e) {
+                try {
+                    $("#rv").html($("#rv").html() + e.data + "<p>");
+                } catch (e) {
+                    console.log(e);
+                    return;
+                }
+            };
+            gsocket.onerror = function (e) {
+                console.log('websocket error');
+                gsocket = null;
+            };
+
+        });
+    </script>
+
+</body>
+</html>
