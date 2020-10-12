@@ -18,10 +18,6 @@ namespace webServer.Controllers
         private UserManager _userManager;
         private MsgManager _msgManager;
 
-        public MsgController(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
-
         /// <summary>
         /// 发送普通消息
         /// </summary>

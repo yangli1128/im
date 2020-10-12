@@ -10,33 +10,37 @@ using Microsoft.Extensions.Logging;
 
 namespace webServer.Controllers
 {
-    public class BaseController : ControllerBase
+    public class BaseController : Controller
     {
-        protected IServiceProvider ServiceProvider { get; }
-        public BaseController(IServiceProvider serviceProvider)
+        //protected IServiceProvider ServiceProvider { get; }
+        //public BaseController(IServiceProvider serviceProvider)
+        //{
+        //    ServiceProvider = serviceProvider;
+        //    OnCreateProperties();
+        //}
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
-            ServiceProvider = serviceProvider;
-            OnCreateProperties();
+            base.OnActionExecuting(context);
+            OnCreateProperties(context);
+
         }
-        protected virtual void OnCreateProperties()
+        protected virtual void OnCreateProperties(ActionExecutingContext context)
         {
-            object controller = this;
+            object controller = context.Controller;
             foreach (PropertyInfo declaredProperty in controller.GetType().GetTypeInfo().DeclaredProperties)
             {
                 if (declaredProperty.CanWrite)
                 {
                     declaredProperty.GetSetMethod(true).Invoke(controller, new object[1]
                     {
-                        ActivatorUtilities.GetServiceOrCreateInstance(ServiceProvider, declaredProperty.PropertyType)
+                        ActivatorUtilities.GetServiceOrCreateInstance(context.HttpContext.RequestServices, declaredProperty.PropertyType)
                     });
                 }
             }
             foreach (var declaredProperty in controller.GetType().GetTypeInfo().DeclaredFields)
             {
                 declaredProperty.SetValue(controller,
-
-                        ActivatorUtilities.GetServiceOrCreateInstance(ServiceProvider, declaredProperty.FieldType)
-
+                        ActivatorUtilities.GetServiceOrCreateInstance(context.HttpContext.RequestServices, declaredProperty.FieldType)
                 );
             }
         }

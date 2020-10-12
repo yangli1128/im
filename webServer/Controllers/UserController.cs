@@ -16,9 +16,6 @@ namespace webServer.Controllers
         public string Ip => this.Request.Headers["X-Real-IP"].FirstOrDefault() ?? this.Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
         private UserManager _userManager;
-        public UserController(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
         /// <summary>
         /// 创建用户
         /// </summary>
