@@ -58,7 +58,7 @@ namespace webServer.Controllers
         }
 
         /// <summary>
-        /// 群聊，绑定消息频道
+        /// 加入群聊，绑定消息频道
         /// </summary>
         /// <param name="accid">本地标识，若无则不传，接口会返回，请保存本地重复使用</param>
         /// <param name="channel">消息频道</param>
@@ -75,6 +75,29 @@ namespace webServer.Controllers
                 return new AjaxResult<object>("channel不存在");
 
             ImHelper.JoinChan(accid, channel.ToString());
+            return new AjaxResult<object>
+            {
+                code = 0
+            };
+        }
+        /// <summary>
+        /// 离开群聊
+        /// </summary>
+        /// <param name="accid"></param>
+        /// <param name="channel"></param>
+        /// <returns></returns>
+        [HttpPost("unSubscrChannel")]
+        public async Task<AjaxResult<object>> unSubscrChannel([FromForm] Guid accid, [FromForm] Guid channel)
+        {
+            if (!await _userManager.CheckAccid(accid.ToString(), Appid))
+            {
+                return new AjaxResult<object>("accid不存在");
+            }
+            //判断群是否存在
+            if (await _channelManager.CheckChannel(channel.ToString(), accid.ToString(), Appid))
+                return new AjaxResult<object>("channel不存在");
+
+            ImHelper.LeaveChan(accid, channel.ToString());
             return new AjaxResult<object>
             {
                 code = 0

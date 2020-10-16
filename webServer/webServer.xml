@@ -31,6 +31,14 @@
             <param name="channel">消息频道</param>
             <returns></returns>
         </member>
+        <member name="M:webServer.Controllers.ChannelController.unSubscrChannel(System.Guid,System.Guid)">
+            <summary>
+            离开
+            </summary>
+            <param name="accid"></param>
+            <param name="channel"></param>
+            <returns></returns>
+        </member>
         <member name="M:webServer.Controllers.MsgController.SendMsg(System.Guid,System.Int32,System.Guid,System.Int32,System.String)">
             <summary>
             发送普通消息
