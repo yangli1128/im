@@ -27,7 +27,7 @@ namespace webServer.Controllers
             if (accid == Guid.Empty)
                 return new AjaxResult<object>("accid未空");
 
-            int i = await _userManager.Add(accid.ToString(), "20201010001");
+            int i = await _userManager.Add(accid.ToString(), Appid);
             if (i == 1)
             {
                 return new AjaxResult<object>("accid重复");
@@ -45,7 +45,7 @@ namespace webServer.Controllers
             if (accid == Guid.Empty)
                 return new AjaxResult<object>("accid未空");
             //判断是否存在
-            if (!await _userManager.CheckAccid(accid.ToString(), "20201010001"))
+            if (!await _userManager.CheckAccid(accid.ToString(), Appid))
             {
                 return new AjaxResult<object>("accid不存在");
             }

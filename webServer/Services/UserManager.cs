@@ -14,7 +14,7 @@ namespace webServer.Services
         }
         public async Task<int> Add(string accid, string appid)
         {
-            if(await db.Userinfo.Where(w => w.Accid == accid && w.Appid == appid).CountAsync()>0)
+            if (await CheckAccid(accid, appid))
                 return 1;
             db.Userinfo.Add(new Models.Userinfo()
             {

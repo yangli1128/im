@@ -12,6 +12,7 @@ namespace webServer.Controllers
 {
     public class BaseController : Controller
     {
+        protected string Appid { get; set; }
         //protected IServiceProvider ServiceProvider { get; }
         //public BaseController(IServiceProvider serviceProvider)
         //{
@@ -20,6 +21,7 @@ namespace webServer.Controllers
         //}
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            Appid = "20201010001";
             base.OnActionExecuting(context);
             OnCreateProperties(context);
 
