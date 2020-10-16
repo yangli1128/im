@@ -100,9 +100,9 @@ namespace webServer.Controllers
             return new AjaxResult<object>();
         }
 
-        public async void LoadMsg([FromForm] Guid from, [FromForm] Guid to)
-        {
+        //public async void LoadMsg([FromForm] Guid from, [FromForm] Guid to)
+        //{
 
-        }
+        //}
     }
 }

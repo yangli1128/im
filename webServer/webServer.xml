@@ -25,7 +25,7 @@
         </member>
         <member name="M:webServer.Controllers.ChannelController.SubscrChannel(System.Guid,System.Guid)">
             <summary>
-            群聊，绑定消息频道
+            加入群聊，绑定消息频道
             </summary>
             <param name="accid">本地标识，若无则不传，接口会返回，请保存本地重复使用</param>
             <param name="channel">消息频道</param>
@@ -33,7 +33,7 @@
         </member>
         <member name="M:webServer.Controllers.ChannelController.unSubscrChannel(System.Guid,System.Guid)">
             <summary>
-            离开
+            离开群聊
             </summary>
             <param name="accid"></param>
             <param name="channel"></param>
