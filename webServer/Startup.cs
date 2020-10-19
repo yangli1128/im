@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using webServer.Filters;
 using webServer.Models;
 using webServer.Services;
 
@@ -35,7 +36,9 @@ namespace webServer
                 );
             services.AddDbContext<imdbContext>(opt => opt.UseMySql(Configuration.GetConnectionString("imdb")));
 
-            services.AddControllers().AddNewtonsoftJson(opt =>
+            services.AddControllers((configure) => {
+                configure.Filters.Add<ValidateAuthorizeFilter>(0);
+            }).AddNewtonsoftJson(opt =>
             {
                 opt.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });

@@ -21,7 +21,8 @@ namespace webServer.Controllers
         //}
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            Appid = "20201010001";
+            var headers = context.HttpContext.Request.Headers;
+            Appid = headers["appid"]; ;
             base.OnActionExecuting(context);
             OnCreateProperties(context);
 

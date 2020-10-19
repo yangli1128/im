@@ -15,6 +15,7 @@ namespace webServer.Models
         {
         }
 
+        public virtual DbSet<Accountinfo> Accountinfo { get; set; }
         public virtual DbSet<Groupinfo> Groupinfo { get; set; }
         public virtual DbSet<Msginfo> Msginfo { get; set; }
         public virtual DbSet<Userinfo> Userinfo { get; set; }
@@ -30,6 +31,49 @@ namespace webServer.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Accountinfo>(entity =>
+            {
+                entity.ToTable("accountinfo");
+
+                entity.HasIndex(e => e.AppSecret)
+                    .HasName("accid")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Appid)
+                    .HasName("appid");
+
+                entity.HasIndex(e => new { e.AppSecret, e.Appid })
+                    .HasName("accidappid")
+                    .IsUnique()
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasColumnType("bigint(20)");
+
+                entity.Property(e => e.AppSecret)
+                    .HasColumnName("appSecret")
+                    .HasColumnType("varchar(100)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.Appid)
+                    .HasColumnName("appid")
+                    .HasColumnType("varchar(60)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+
+                entity.Property(e => e.Createtime)
+                    .HasColumnName("createtime")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Remark)
+                    .HasColumnName("remark")
+                    .HasColumnType("varchar(400)")
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
+            });
+
             modelBuilder.Entity<Groupinfo>(entity =>
             {
                 entity.ToTable("groupinfo");
@@ -88,14 +132,14 @@ namespace webServer.Models
                 entity.Property(e => e.Appid)
                     .HasColumnName("appid")
                     .HasColumnType("varchar(60)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Body)
                     .HasColumnName("body")
                     .HasColumnType("varchar(4000)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Createtime)
                     .HasColumnName("createtime")
@@ -104,8 +148,8 @@ namespace webServer.Models
                 entity.Property(e => e.From)
                     .HasColumnName("from")
                     .HasColumnType("varchar(60)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Ope)
                     .HasColumnName("ope")
@@ -122,8 +166,8 @@ namespace webServer.Models
                 entity.Property(e => e.To)
                     .HasColumnName("to")
                     .HasColumnType("varchar(60)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Type)
                     .HasColumnName("type")
@@ -153,14 +197,14 @@ namespace webServer.Models
                 entity.Property(e => e.Accid)
                     .HasColumnName("accid")
                     .HasColumnType("varchar(60)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Appid)
                     .HasColumnName("appid")
                     .HasColumnType("varchar(60)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
 
                 entity.Property(e => e.Createtime)
                     .HasColumnName("createtime")
@@ -169,8 +213,8 @@ namespace webServer.Models
                 entity.Property(e => e.Remark)
                     .HasColumnName("remark")
                     .HasColumnType("varchar(400)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                    .HasCharSet("utf8")
+                    .HasCollation("utf8_general_ci");
             });
 
             OnModelCreatingPartial(modelBuilder);

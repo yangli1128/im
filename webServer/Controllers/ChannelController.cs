@@ -12,8 +12,8 @@ namespace webServer.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class ChannelController : BaseController
     {
 
