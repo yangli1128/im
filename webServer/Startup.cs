@@ -57,7 +57,8 @@ namespace webServer
 
             services.AddTransient(typeof(MsgManager));
             services.AddTransient(typeof(UserManager));
-
+            services.AddTransient(typeof(AccountManager));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
