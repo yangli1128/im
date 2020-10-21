@@ -26,6 +26,7 @@ namespace webServer.Filters
 
         override public void OnActionExecuting(ActionExecutingContext context)
         {
+            return;
             var headers = context.HttpContext.Request.Headers;
             int tvali = TokenValidate(headers);
 

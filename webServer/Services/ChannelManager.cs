@@ -32,5 +32,9 @@ namespace webServer.Services
         {
             return await db.Groupinfo.Where(w => w.Groupid == channel && w.Accid == accid && w.Appid == appid).CountAsync() > 0;
         }
+        public async Task<bool> CheckChannel(string channel, string appid)
+        {
+            return await db.Groupinfo.Where(w => w.Groupid == channel && w.Appid == appid).CountAsync() > 0;
+        }
     }
 }

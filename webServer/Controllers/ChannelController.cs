@@ -71,7 +71,7 @@ namespace webServer.Controllers
                 return new AjaxResult<object>("accid不存在");
             }
             //判断群是否存在
-            if (await _channelManager.CheckChannel(channel.ToString(), accid.ToString(), Appid))
+            if (await _channelManager.CheckChannel(channel.ToString(),Appid))
                 return new AjaxResult<object>("channel不存在");
 
             ImHelper.JoinChan(accid, channel.ToString());
@@ -94,7 +94,7 @@ namespace webServer.Controllers
                 return new AjaxResult<object>("accid不存在");
             }
             //判断群是否存在
-            if (await _channelManager.CheckChannel(channel.ToString(), accid.ToString(), Appid))
+            if (await _channelManager.CheckChannel(channel.ToString(), Appid))
                 return new AjaxResult<object>("channel不存在");
 
             ImHelper.LeaveChan(accid, channel.ToString());

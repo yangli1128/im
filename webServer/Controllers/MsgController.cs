@@ -17,7 +17,7 @@ namespace webServer.Controllers
 
         private UserManager _userManager;
         private MsgManager _msgManager;
-
+        private ChannelManager _channelManager;
         /// <summary>
         /// 发送普通消息
         /// </summary>
@@ -53,7 +53,7 @@ namespace webServer.Controllers
             {
                 return new AjaxResult<object>("from不存在");
             }
-            if (ope == 1)
+            if (ope == 0)
             {
                 if (!await _userManager.CheckAccid(to.ToString(), Appid))
                 {
@@ -62,10 +62,10 @@ namespace webServer.Controllers
             }
             else if (ope == 1)
             {
-                //if (!await _userManager.CheckAccid(to.ToString(), Appid))
-                //{
-                //    return new AjaxResult<object>("to不存在");
-                //}
+                if (!await _channelManager.CheckChannel(to.ToString(), Appid))
+                {
+                    return new AjaxResult<object>("to不存在");
+                }
             }
             else
             {
@@ -77,7 +77,7 @@ namespace webServer.Controllers
             if (!ImHelper.HasOnline(from))
                 return new AjaxResult<object>("from不在线");
             //发送消息
-            if (ope == 1)//单聊
+            if (ope == 0)//单聊
                 ImHelper.SendMessage(from, new[] { to }, (id, ope, type, body), true);
             else if (ope == 1)//群聊
                 ImHelper.SendChanMessage(from, to.ToString(), (id, ope, type, body));
