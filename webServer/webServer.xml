@@ -39,7 +39,7 @@
             <param name="channel"></param>
             <returns></returns>
         </member>
-        <member name="M:webServer.Controllers.MsgController.SendMsg(System.Guid,System.Int32,System.Guid,System.Int32,System.String)">
+        <member name="M:webServer.Controllers.MsgController.SendMsg(System.Guid,System.Int32,System.Guid,System.Int32,System.String,System.String)">
             <summary>
             发送普通消息
             </summary>
@@ -64,6 +64,16 @@
             "h":2332,    //高  
             "size":388245    //图片大小  
             }  
+            ]]>
+            </param>
+            <param name="frominfo">
+            <![CDATA[
+            发送者头像与昵称  
+            {  
+                "Avator":"",  
+                "UserId":"",  
+                "NickName":""  
+            }
             ]]>
             </param>
             <returns></returns>

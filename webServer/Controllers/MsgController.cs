@@ -44,9 +44,19 @@ namespace webServer.Controllers
         /// }  
         /// ]]>
         /// </param>
+        /// <param name="frominfo">
+        /// <![CDATA[
+        /// 发送者头像与昵称  
+        /// {  
+        ///     "Avator":"",  
+        ///     "UserId":"",  
+        ///     "NickName":""  
+        /// }
+        /// ]]>
+        /// </param>
         /// <returns></returns>
         [HttpPost("SendMsg")]
-        public async Task<AjaxResult<object>> SendMsg([FromForm] Guid from, [FromForm] int ope, [FromForm] Guid to, [FromForm] int type, [FromForm] string body)
+        public async Task<AjaxResult<object>> SendMsg([FromForm] Guid from, [FromForm] int ope, [FromForm] Guid to, [FromForm] int type, [FromForm] string body,[FromForm] string frominfo)
         {
             //判断是否存在
             if (!await _userManager.CheckAccid(from.ToString(), Appid))
@@ -78,9 +88,9 @@ namespace webServer.Controllers
                 return new AjaxResult<object>("from不在线");
             //发送消息
             if (ope == 0)//单聊
-                ImHelper.SendMessage(from, new[] { to }, (id, ope, type, body), true);
+                ImHelper.SendMessage(from, new[] { to },new { id, ope, type,to, body, frominfo }, true);
             else if (ope == 1)//群聊
-                ImHelper.SendChanMessage(from, to.ToString(), (id, ope, type, body));
+                ImHelper.SendChanMessage(from, to.ToString(), new { id, ope, type, to, body, frominfo });
 
             return new AjaxResult<object>((object)(from + ":" + to));
         }
@@ -95,7 +105,7 @@ namespace webServer.Controllers
         {
             await _msgManager.Read(Appid, from.ToString(), to.ToString());
             int ope = -1;
-            ImHelper.SendMessage(from, new[] { to }, (ope), true);
+            ImHelper.SendMessage(from, new[] { to }, new { ope }, true);
 
             return new AjaxResult<object>();
         }

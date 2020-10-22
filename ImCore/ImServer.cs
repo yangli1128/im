@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
@@ -29,7 +30,7 @@ public static class ImServerExtenssions
             if (isUseWebSockets == false)
             {
                 isUseWebSockets = true;
-                appcur.UseWebSockets();
+                appcur.UseWebSockets(new WebSocketOptions() { KeepAliveInterval = TimeSpan.FromSeconds(10)});
             }
             appcur.Use((ctx, next) =>
                 imserv.Acceptor(ctx, next));
@@ -66,6 +67,52 @@ class ImServer : ImClient
             //_redis.Eval($"if redis.call('HINCRBY', KEYS[1], '{v}', '-1') <= 0 then redis.call('HDEL', KEYS[1], '{v}') end return 1",
             //$"{_redisPrefix}Online");
         }
+        new Thread(_ =>
+        {
+            while (true)
+            {
+                try
+                {
+                    List<WebSocket> list = new List<WebSocket>();
+                    foreach (var v in _clients)
+                    {
+                        foreach (var s in v.Value)
+                        {
+                            try
+                            {
+                                var outgoing = new ArraySegment<byte>(Encoding.UTF8.GetBytes(""));
+                                CancellationTokenSource source = new CancellationTokenSource(1000);
+                                s.Value.socket.SendAsync(outgoing, WebSocketMessageType.Text, true, source.Token).Wait();
+                                if(source.IsCancellationRequested)
+                                {
+                                    Console.WriteLine("超时发送");
+                                    list.Add(s.Value.socket);
+                                }
+                            }
+                            catch { 
+                                list.Add(s.Value.socket);
+                            }
+                            if (s.Value.socket.State != WebSocketState.Open)
+                            {
+                                list.Add(s.Value.socket);
+                            }
+                        }
+                    }
+                    foreach (var v in list)
+                    {
+                        Console.WriteLine("remove websocket");
+                        try
+                        {
+                            v.Abort();
+                        }
+                        catch { 
+                        }
+                    }
+                }
+                catch { }
+                Thread.Sleep(100);
+            }
+        });
     }
 
     const int BufferSize = 4096;
@@ -95,13 +142,14 @@ class ImServer : ImClient
         var data = JsonConvert.DeserializeObject<(Guid clientId, string clientMetaData)>(token_value);
 
         var socket = await context.WebSockets.AcceptWebSocketAsync();
+
         var cli = new ImServerClient(socket, data.clientId);
         var newid = Guid.NewGuid();
 
         var wslist = _clients.GetOrAdd(data.clientId, cliid => new ConcurrentDictionary<Guid, ImServerClient>());
         wslist.TryAdd(newid, cli);
         _redis.StartPipe(a => a.HIncrBy($"{_redisPrefix}Online", data.clientId.ToString(), 1).Publish($"evt_{_redisPrefix}Online", token_value));
-      
+
         Console.WriteLine($"websocket {data.clientId} Online");
 
         var buffer = new byte[BufferSize];

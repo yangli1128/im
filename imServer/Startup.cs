@@ -26,9 +26,9 @@ namespace imServer
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            Console.OutputEncoding = Encoding.GetEncoding("GB2312");
-            Console.InputEncoding = Encoding.GetEncoding("GB2312");
+            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //Console.OutputEncoding = Encoding.GetEncoding("GB2312");
+            //Console.InputEncoding = Encoding.GetEncoding("GB2312");
             
             app.UseDeveloperExceptionPage();
 
