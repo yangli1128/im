@@ -7,7 +7,8 @@ scp -r /C/Users/Administrator/Desktop/im/webServer/bin/Release/netcoreapp3.0/pub
 ssh root@118.31.127.222 "cat /home/docker/aspnetcore/im/webserver/publish/appsettings.json"
 ssh root@118.31.127.222 "sed -i 's/118.31.127.222:6379/172.16.125.58:6379/g'  /home/docker/aspnetcore/im/webserver/publish/appsettings.json"
 ssh root@118.31.127.222 "sed -i 's/118.31.127.222;/172.16.125.58;/g'  /home/docker/aspnetcore/im/webserver/publish/appsettings.json"
-ssh root@118.31.127.222 "sed -i 's/127.0.0.1/118.31.127.222/g'  /home/docker/aspnetcore/im/webserver/publish/appsettings.json"
+ssh root@118.31.127.222 "sed -i 's/127.0.0.1:6001/imserver.kzfuwu.com/g'  /home/docker/aspnetcore/im/webserver/publish/appsettings.json"
+ssh root@118.31.127.222 "sed -i 's/ws/wss/g'  /home/docker/aspnetcore/im/webserver/publish/appsettings.json"
 ssh root@118.31.127.222 "cat /home/docker/aspnetcore/im/webserver/publish/appsettings.json"
 #Ö´ÐÐdocker¸üÐÂ
 ssh root@118.31.127.222 "docker stop kuaizi.im.webserver_0.1"

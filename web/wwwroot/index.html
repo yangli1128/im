@@ -62,14 +62,15 @@
             methods: {
                 connectWebsocket() {
                     var _self = this;
+                    _self.id = 'c290f8dc-4ba5-4a67-ab67-eeb1c3896b6f';
                     if (top != window) return;
-                    var data = {};
+                    var data = { accid: _self.id };
                     //_self.id = localStorage.getItem('websocketid');
-                    if (_self.id != '' && _self.id) data.websocketId = _self.id;
-                    ajax('/ws/pre-connect', data, function (d) {
+                    //if (_self.id != '' && _self.id) data.websocketId = _self.id;
+                    ajax('http://118.31.127.222:6002/User/ConnectServer', data, function (d) {
                         if (!(_self.id != '' && _self.id)) _self.id = d.websocketId; //localStorage.setItem('websocketid', _self.id = d.websocketId); //存储本地重复使用
                         selfid = _self.id;
-                        var url = d.server;
+                        var url = d.data;
                         if (gsocket) gsocket.close();
                         gsocket = null;
                         gsocket = new WebSocket(url);
@@ -87,7 +88,7 @@
                         };
                         gsocket.onmessage = function (e) {
                             try {
-                                $("#rv").html($("#rv").html()+e.data+"<p>");
+                                $("#rv").html($("#rv").html() + e.data + "<p>");
                                 var msg = JSON.parse(e.data);
                                 _self.onmessage.call(_self, msg);
                             } catch (e) {
@@ -122,7 +123,7 @@
                 },
                 joinChannel: function (chan) {
                     var _self = this;
-                    ajax('/ws/subscr-channel', { websocketid: _self.id, channel: chan }, function (rt) {
+                    ajax('http://118.31.127.222:6002/Channel/SubscrChannel', { accid: _self.id, channel: 'd2cffdbf-9161-47bd-a7ae-9efc4e335203' }, function (rt) {
                         _self.currentChannel.chan = chan;
                         _self.currentChannel.msgs.splice(0, _self.currentChannel.msgs.length);
                         _self.sendChannelMsg({ type: 'welcome' });
@@ -160,6 +161,7 @@
                 url: url,
                 data: data,
                 dataType: "json",
+                headers: { appid:"20201010001"},
                 beforeSend: function (request) {
                 },
                 success: function (data) {

@@ -23,6 +23,7 @@ public class ImClientOptions
     /// websocket请求的路径，默认值：/ws
     /// </summary>
     public string PathMatch { get; set; } = "/ws";
+    public string WsType { get; set; } = "ws";
 }
 
 public class ImSendEventArgs : EventArgs
@@ -66,6 +67,7 @@ public class ImClient
     protected string[] _servers;
     protected string _redisPrefix;
     protected string _pathMatch;
+    protected string _wsType;
 
     /// <summary>
     /// 推送消息的事件，可审查推向哪个Server节点
@@ -84,6 +86,7 @@ public class ImClient
         _servers = options.Servers;
         _redisPrefix = $"wsim{options.PathMatch.Replace('/', '_')}";
         _pathMatch = options.PathMatch ?? "/ws";
+        _wsType = options.WsType ?? "ws";
     }
 
     /// <summary>
@@ -109,7 +112,7 @@ public class ImClient
         var server = SelectServer(clientId);
         var token = $"{Guid.NewGuid()}{Guid.NewGuid()}{Guid.NewGuid()}{Guid.NewGuid()}".Replace("-", "");
         _redis.Set($"{_redisPrefix}Token{token}", JsonConvert.SerializeObject((clientId, clientMetaData)), 10);
-        return $"ws://{server}{_pathMatch}?token={token}";
+        return $"{_wsType}://{server}{_pathMatch}?token={token}";
     }
 
     /// <summary>

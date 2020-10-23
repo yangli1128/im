@@ -83,6 +83,7 @@ namespace webServer
             {
                 Redis = new CSRedis.CSRedisClient(Configuration["ImServerOption:CSRedisClient"]),
                 Servers = Configuration["ImServerOption:Servers"].Split(";"),//IMsever的地址，外网地址
+                WsType = Configuration["ImServerOption:SslType"]
             });
 
             ImHelper.Instance.OnSend += (s, e) =>
