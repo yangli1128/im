@@ -3,6 +3,25 @@
 #拷贝文件
 scp -r /C/Users/Administrator/Desktop/im/webServer/bin/Release/netcoreapp3.0/publish/ root@118.31.127.222:/home/docker/aspnetcore/im/webserver
 
+# 进入目录
+#echo -e '\033[1;32mcd push\033[0m'
+#cd /C/Users/Administrator/Desktop/im/webServer/bin/Release/netcoreapp3.0
+# 压缩
+#echo -e '\033[1;32mtar -z\033[0m'
+#tar -zcvf publish.tar.gz ./publish/*
+# 上传
+#echo -e '\033[1;32mupload\033[0m'
+#scp -r /C/Users/Administrator/Desktop/im/webServer/bin/Release/netcoreapp3.0/publish.tar.gz root@118.31.127.222:/home/docker/aspnetcore/im/webserver/publish.tar.gz
+#if [ $? -ne 0 ]; then
+#    echo "failed"
+#	read Arg
+#	exit;
+#fi
+# 解压
+#echo -e '\033[1;32mtar -x\033[0m'
+#ssh root@118.31.127.222 "tar -xzvf /home/docker/aspnetcore/im/webserver/publish.tar.gz -C /home/docker/aspnetcore/im/webserver/"
+#echo -e '\033[1;32mconfig\033[0m'
+
 #配置文件
 ssh root@118.31.127.222 "cat /home/docker/aspnetcore/im/webserver/publish/appsettings.json"
 ssh root@118.31.127.222 "sed -i 's/118.31.127.222:6379/172.16.125.58:6379/g'  /home/docker/aspnetcore/im/webserver/publish/appsettings.json"

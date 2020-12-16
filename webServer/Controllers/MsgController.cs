@@ -61,20 +61,20 @@ namespace webServer.Controllers
             //判断是否存在
             if (!await _userManager.CheckAccid(from.ToString(), Appid))
             {
-                return new AjaxResult<object>("from不存在");
+                return new AjaxResult<object>("消息发送者 不存在");
             }
             if (ope == 0)
             {
                 if (!await _userManager.CheckAccid(to.ToString(), Appid))
                 {
-                    return new AjaxResult<object>("to不存在");
+                    return new AjaxResult<object>("用户id 不存在");
                 }
             }
             else if (ope == 1)
             {
                 if (!await _channelManager.CheckChannel(to.ToString(), Appid))
                 {
-                    return new AjaxResult<object>("to不存在");
+                    return new AjaxResult<object>("群id 不存在");
                 }
             }
             else
@@ -85,7 +85,7 @@ namespace webServer.Controllers
             int id = await _msgManager.Add(Appid, from.ToString(), ope, to.ToString(), type, body);
             //判断自己是否在线
             if (!ImHelper.HasOnline(from))
-                return new AjaxResult<object>("from不在线");
+                return new AjaxResult<object>("你不在线");
             //发送消息
             if (ope == 0)//单聊
                 ImHelper.SendMessage(from, new[] { to }, new { id, ope, type, to, body, frominfo }, true);

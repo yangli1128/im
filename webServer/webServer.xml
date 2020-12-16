@@ -86,6 +86,14 @@
             <param name="to"></param>
             <returns></returns>
         </member>
+        <member name="M:webServer.Controllers.MsgController.LoadMsg(System.Guid,System.Guid)">
+            <summary>
+            获取消息列表100条数据
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
         <member name="M:webServer.Controllers.UserController.Create(System.Guid)">
             <summary>
             创建用户
