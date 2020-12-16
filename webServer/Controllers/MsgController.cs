@@ -56,7 +56,7 @@ namespace webServer.Controllers
         /// </param>
         /// <returns></returns>
         [HttpPost("SendMsg")]
-        public async Task<AjaxResult<object>> SendMsg([FromForm] Guid from, [FromForm] int ope, [FromForm] Guid to, [FromForm] int type, [FromForm] string body,[FromForm] string frominfo)
+        public async Task<AjaxResult<object>> SendMsg([FromForm] Guid from, [FromForm] int ope, [FromForm] Guid to, [FromForm] int type, [FromForm] string body, [FromForm] string frominfo)
         {
             //判断是否存在
             if (!await _userManager.CheckAccid(from.ToString(), Appid))
@@ -88,7 +88,7 @@ namespace webServer.Controllers
                 return new AjaxResult<object>("from不在线");
             //发送消息
             if (ope == 0)//单聊
-                ImHelper.SendMessage(from, new[] { to },new { id, ope, type,to, body, frominfo }, true);
+                ImHelper.SendMessage(from, new[] { to }, new { id, ope, type, to, body, frominfo }, true);
             else if (ope == 1)//群聊
                 ImHelper.SendChanMessage(from, to.ToString(), new { id, ope, type, to, body, frominfo });
 
@@ -109,10 +109,17 @@ namespace webServer.Controllers
 
             return new AjaxResult<object>();
         }
-
-        //public async void LoadMsg([FromForm] Guid from, [FromForm] Guid to)
-        //{
-
-        //}
+        /// <summary>
+        /// 获取消息列表100条数据
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        [HttpPost("MsgList")]
+        public async Task<AjaxResult<List<Models.Msginfo>>> LoadMsg([FromForm] Guid from, [FromForm] Guid to)
+        {
+            var v= await _msgManager.List(Appid, from.ToString(), to.ToString());
+            return new AjaxResult<List<Models.Msginfo>>(v);
+        }
     }
 }

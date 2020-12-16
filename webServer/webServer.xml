@@ -39,7 +39,7 @@
             <param name="channel"></param>
             <returns></returns>
         </member>
-        <member name="M:webServer.Controllers.MsgController.SendMsg(System.Guid,System.Int32,System.Guid,System.Int32,System.String,webServer.Services.Dtos.UserInfo)">
+        <member name="M:webServer.Controllers.MsgController.SendMsg(System.Guid,System.Int32,System.Guid,System.Int32,System.String,System.String)">
             <summary>
             发送普通消息
             </summary>
