@@ -44,7 +44,7 @@ namespace webServer.Services
 
         public async Task<List<Models.Msginfo>> List(string appid, string from, string to)
         {
-            return await db.Msginfo.Where(w => w.Appid == appid && ((w.From == from && w.To == to) || (w.From == to && w.To == from))).OrderByDescending(o => o.Id).Take(100).ToListAsync();
+            return await db.Msginfo.Where(w => w.Appid == appid && ((w.From == from && w.To == to) || (w.From == to && w.To == from))).OrderBy(o => o.Id).Take(100).ToListAsync();
         }
     }
 }
