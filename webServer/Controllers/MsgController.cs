@@ -88,9 +88,9 @@ namespace webServer.Controllers
                 return new AjaxResult<object>("你不在线");
             //发送消息
             if (ope == 0)//单聊
-                ImHelper.SendMessage(from, new[] { to }, new { id, ope, type, to, body, frominfo }, true);
+                ImHelper.SendMessage(from, new[] { to }, new { id, ope, type, to, body, frominfo,from }, true);
             else if (ope == 1)//群聊
-                ImHelper.SendChanMessage(from, to.ToString(), new { id, ope, type, to, body, frominfo });
+                ImHelper.SendChanMessage(from, to.ToString(), new { id, ope, type, to, body, frominfo,from });
 
             return new AjaxResult<object>((object)(from + ":" + to));
         }
