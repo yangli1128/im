@@ -105,7 +105,7 @@ namespace webServer.Controllers
         {
             await _msgManager.Read(Appid, from.ToString(), to.ToString());
             int ope = -1;
-            ImHelper.SendMessage(from, new[] { to }, new { ope }, true);
+            ImHelper.SendMessage(from, new[] { to }, new { ope, to, from }, false);
 
             return new AjaxResult<object>();
         }
